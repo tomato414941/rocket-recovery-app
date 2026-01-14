@@ -14,6 +14,8 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.5.0",
     "clsx": "^2.1.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.562.0",
@@ -22,6 +24,7 @@
     "react-leaflet": "^5.0.0",
     "recharts": "^3.6.0",
     "tailwind-merge": "^3.4.0",
+    "three": "^0.182.0",
     "zustand": "^5.0.10"
   },
   "lint-staged": {
@@ -36,6 +39,7 @@
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.182.0",
     "@vitejs/plugin-react": "^5.1.1",
     "@vitest/coverage-v8": "^4.0.17",
     "autoprefixer": "^10.4.23",
