@@ -21,10 +21,10 @@ export function MissionSetup() {
     <div className="p-4 space-y-6">
       {/* ヘッダー */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-900">ミッション設定</h2>
+        <h2 className="text-lg font-semibold text-slate-50">ミッション設定</h2>
         <button
           onClick={resetToDefaults}
-          className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1"
+          className="text-sm text-slate-400 hover:text-slate-200 flex items-center gap-1 transition-colors"
         >
           <RotateCcw size={14} />
           リセット
@@ -33,31 +33,31 @@ export function MissionSetup() {
 
       {/* 発射地点 */}
       <section>
-        <h3 className="text-sm font-medium text-gray-700 mb-3">発射地点</h3>
+        <h3 className="text-sm font-medium text-slate-300 mb-3">発射地点</h3>
         <LaunchSiteSettings />
       </section>
 
       {/* ロケットパラメータ */}
       <section>
-        <h3 className="text-sm font-medium text-gray-700 mb-3">ロケット</h3>
+        <h3 className="text-sm font-medium text-slate-300 mb-3">ロケット</h3>
         <RocketParameters />
       </section>
 
       {/* 回収設定 */}
       <section>
-        <h3 className="text-sm font-medium text-gray-700 mb-3">回収方式</h3>
+        <h3 className="text-sm font-medium text-slate-300 mb-3">回収方式</h3>
         <RecoverySettings />
       </section>
 
       {/* 気象設定 */}
       <section>
-        <h3 className="text-sm font-medium text-gray-700 mb-3">気象データ</h3>
+        <h3 className="text-sm font-medium text-slate-300 mb-3">気象データ</h3>
         <WeatherSettings />
       </section>
 
       {/* エラー表示 */}
       {calculationError && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+        <div className="p-3 bg-red-900/50 border border-red-700 rounded-lg text-red-300 text-sm">
           {calculationError}
         </div>
       )}
@@ -66,7 +66,7 @@ export function MissionSetup() {
       <button
         onClick={runSimulation}
         disabled={isCalculating}
-        className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium rounded-lg flex items-center justify-center gap-2 transition-colors"
+        className="w-full py-3 bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:text-slate-400 text-white font-medium rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-600/30 hover:shadow-blue-500/40"
       >
         {isCalculating ? (
           <>

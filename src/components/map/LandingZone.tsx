@@ -61,13 +61,13 @@ export function LandingZone() {
 
   return (
     <>
-      {/* 不確実性楕円 */}
+      {/* 不確実性楕円 - ダークテーマ用に調整 */}
       <Polygon
         positions={ellipsePoints}
         pathOptions={{
-          color: '#dc2626',
-          fillColor: '#fecaca',
-          fillOpacity: 0.3,
+          color: '#ef4444',
+          fillColor: '#ef4444',
+          fillOpacity: 0.2,
           weight: 2,
           dashArray: '5, 5',
         }}
@@ -76,26 +76,26 @@ export function LandingZone() {
       {/* 予測着地点マーカー */}
       <CircleMarker
         center={[predictedLanding.latitude, predictedLanding.longitude]}
-        radius={10}
+        radius={12}
         pathOptions={{
-          color: '#dc2626',
+          color: '#1e293b',
           fillColor: '#ef4444',
           fillOpacity: 1,
           weight: 3,
         }}
       >
-        <Popup>
-          <div className="text-sm">
-            <div className="font-bold mb-1">予測落下地点</div>
-            <div>緯度: {predictedLanding.latitude.toFixed(6)}°</div>
-            <div>経度: {predictedLanding.longitude.toFixed(6)}°</div>
-            <div className="mt-1 border-t pt-1">
-              <div>距離: {stats.horizontalDistance.toFixed(0)} m</div>
-              <div>方位: {stats.landingBearing.toFixed(0)}°</div>
-              <div>飛行時間: {stats.totalFlightTime.toFixed(1)} s</div>
-              <div>着地速度: {stats.landingVelocity.toFixed(1)} m/s</div>
+        <Popup className="dark-popup">
+          <div style={{ background: '#1e293b', color: '#f8fafc', padding: '8px', borderRadius: '8px', fontSize: '13px' }}>
+            <div style={{ fontWeight: 'bold', marginBottom: '6px', color: '#ef4444' }}>予測落下地点</div>
+            <div style={{ color: '#94a3b8' }}>緯度: <span style={{ color: '#f8fafc' }}>{predictedLanding.latitude.toFixed(6)}°</span></div>
+            <div style={{ color: '#94a3b8' }}>経度: <span style={{ color: '#f8fafc' }}>{predictedLanding.longitude.toFixed(6)}°</span></div>
+            <div style={{ marginTop: '6px', paddingTop: '6px', borderTop: '1px solid #334155' }}>
+              <div style={{ color: '#94a3b8' }}>距離: <span style={{ color: '#f8fafc' }}>{stats.horizontalDistance.toFixed(0)} m</span></div>
+              <div style={{ color: '#94a3b8' }}>方位: <span style={{ color: '#f8fafc' }}>{stats.landingBearing.toFixed(0)}°</span></div>
+              <div style={{ color: '#94a3b8' }}>飛行時間: <span style={{ color: '#f8fafc' }}>{stats.totalFlightTime.toFixed(1)} s</span></div>
+              <div style={{ color: '#94a3b8' }}>着地速度: <span style={{ color: '#f8fafc' }}>{stats.landingVelocity.toFixed(1)} m/s</span></div>
             </div>
-            <div className="mt-1 text-gray-500 text-xs">
+            <div style={{ marginTop: '6px', color: '#64748b', fontSize: '11px' }}>
               予測誤差: ±{uncertaintyEllipse.semiMajorAxis.toFixed(0)}m (95%信頼区間)
             </div>
           </div>

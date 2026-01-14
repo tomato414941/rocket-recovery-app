@@ -30,58 +30,58 @@ export function LaunchSiteSettings() {
   };
 
   return (
-    <div className="space-y-3 bg-gray-50 p-3 rounded-lg">
+    <div className="space-y-3 bg-slate-700/50 p-3 rounded-lg">
       {/* 座標入力 */}
       <div className="space-y-2">
         <div className="flex items-center gap-2">
-          <label className="w-16 text-sm text-gray-600">緯度</label>
+          <label className="w-16 text-sm text-slate-400">緯度</label>
           <input
             type="number"
             value={launchSite.latitude}
             onChange={(e) => setLaunchSite({ latitude: parseFloat(e.target.value) || 0 })}
             step={0.0001}
-            className="flex-1 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-2 py-1"
           />
-          <span className="text-sm text-gray-500">°N</span>
+          <span className="text-sm text-slate-500">°N</span>
         </div>
         <div className="flex items-center gap-2">
-          <label className="w-16 text-sm text-gray-600">経度</label>
+          <label className="w-16 text-sm text-slate-400">経度</label>
           <input
             type="number"
             value={launchSite.longitude}
             onChange={(e) => setLaunchSite({ longitude: parseFloat(e.target.value) || 0 })}
             step={0.0001}
-            className="flex-1 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-2 py-1"
           />
-          <span className="text-sm text-gray-500">°E</span>
+          <span className="text-sm text-slate-500">°E</span>
         </div>
         <div className="flex items-center gap-2">
-          <label className="w-16 text-sm text-gray-600">標高</label>
+          <label className="w-16 text-sm text-slate-400">標高</label>
           <input
             type="number"
             value={launchSite.elevation}
             onChange={(e) => setLaunchSite({ elevation: parseFloat(e.target.value) || 0 })}
             step={1}
-            className="flex-1 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-2 py-1"
           />
-          <span className="text-sm text-gray-500">m</span>
+          <span className="text-sm text-slate-500">m</span>
         </div>
       </div>
 
       {/* 現在地取得ボタン */}
       <button
         onClick={getCurrentLocation}
-        className="w-full py-2 bg-white border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50 flex items-center justify-center gap-2"
+        className="w-full py-2 bg-slate-600 hover:bg-slate-500 border border-slate-500 rounded-lg text-sm text-slate-200 flex items-center justify-center gap-2 transition-colors"
       >
         <MapPin size={16} />
         現在地を取得
       </button>
 
       {/* 発射角度・方位 */}
-      <div className="space-y-2 pt-2 border-t border-gray-200">
-        <div className="text-xs font-medium text-gray-500 uppercase">発射角度</div>
+      <div className="space-y-2 pt-2 border-t border-slate-600">
+        <div className="text-xs font-medium text-slate-400 uppercase">発射角度</div>
         <div className="flex items-center gap-2">
-          <label className="w-16 text-sm text-gray-600">仰角</label>
+          <label className="w-16 text-sm text-slate-400">仰角</label>
           <input
             type="range"
             value={launchSite.launchAngle}
@@ -90,10 +90,10 @@ export function LaunchSiteSettings() {
             max={90}
             className="flex-1"
           />
-          <span className="w-12 text-sm text-gray-700 text-right">{launchSite.launchAngle}°</span>
+          <span className="w-12 text-sm text-slate-300 text-right">{launchSite.launchAngle}°</span>
         </div>
         <div className="flex items-center gap-2">
-          <label className="w-16 text-sm text-gray-600">方位</label>
+          <label className="w-16 text-sm text-slate-400">方位</label>
           <input
             type="range"
             value={launchSite.launchAzimuth}
@@ -102,9 +102,9 @@ export function LaunchSiteSettings() {
             max={359}
             className="flex-1"
           />
-          <span className="w-12 text-sm text-gray-700 text-right">{launchSite.launchAzimuth}°</span>
+          <span className="w-12 text-sm text-slate-300 text-right">{launchSite.launchAzimuth}°</span>
         </div>
-        <div className="text-xs text-gray-500 flex items-center gap-1">
+        <div className="text-xs text-slate-500 flex items-center gap-1">
           <Compass size={12} />
           {getCompassDirection(launchSite.launchAzimuth)}向き発射
         </div>

@@ -6,17 +6,17 @@ import { Marker, Popup, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import { useMissionStore } from '../../store/missionStore';
 
-// カスタムアイコン（発射地点）
+// カスタムアイコン（発射地点）- ダークテーマ用に調整
 const launchIcon = L.divIcon({
   className: 'custom-launch-marker',
   html: `
     <div style="
-      width: 24px;
-      height: 24px;
-      background: #dc2626;
-      border: 3px solid white;
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      border: 3px solid #1e293b;
       border-radius: 50%;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.6), 0 2px 4px rgba(0,0,0,0.5);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -24,15 +24,16 @@ const launchIcon = L.divIcon({
       <div style="
         width: 0;
         height: 0;
-        border-left: 5px solid transparent;
-        border-right: 5px solid transparent;
-        border-bottom: 8px solid white;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-bottom: 10px solid white;
         margin-bottom: 2px;
+        filter: drop-shadow(0 1px 1px rgba(0,0,0,0.3));
       "></div>
     </div>
   `,
-  iconSize: [24, 24],
-  iconAnchor: [12, 12],
+  iconSize: [28, 28],
+  iconAnchor: [14, 14],
 });
 
 /**
@@ -77,13 +78,13 @@ export function LaunchSiteMarker() {
           },
         }}
       >
-        <Popup>
-          <div className="text-sm">
-            <div className="font-bold mb-1">発射地点</div>
-            <div>緯度: {launchSite.latitude.toFixed(6)}°</div>
-            <div>経度: {launchSite.longitude.toFixed(6)}°</div>
-            <div>標高: {launchSite.elevation} m</div>
-            <div className="mt-1 text-gray-500">
+        <Popup className="dark-popup">
+          <div style={{ background: '#1e293b', color: '#f8fafc', padding: '8px', borderRadius: '8px', fontSize: '13px' }}>
+            <div style={{ fontWeight: 'bold', marginBottom: '6px', color: '#3b82f6' }}>発射地点</div>
+            <div style={{ color: '#94a3b8' }}>緯度: <span style={{ color: '#f8fafc' }}>{launchSite.latitude.toFixed(6)}°</span></div>
+            <div style={{ color: '#94a3b8' }}>経度: <span style={{ color: '#f8fafc' }}>{launchSite.longitude.toFixed(6)}°</span></div>
+            <div style={{ color: '#94a3b8' }}>標高: <span style={{ color: '#f8fafc' }}>{launchSite.elevation} m</span></div>
+            <div style={{ marginTop: '6px', paddingTop: '6px', borderTop: '1px solid #334155', color: '#64748b', fontSize: '11px' }}>
               発射角度: {launchSite.launchAngle}° / 方位: {launchSite.launchAzimuth}°
             </div>
           </div>

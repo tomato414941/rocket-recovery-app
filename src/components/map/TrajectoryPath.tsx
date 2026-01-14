@@ -55,15 +55,15 @@ export function TrajectoryPath() {
 
   return (
     <>
-      {/* 上昇軌道（青） */}
+      {/* 上昇軌道（青・グロー効果） */}
       {ascentPoints.length > 1 && (
         <Polyline
           positions={ascentPoints}
           pathOptions={{
-            color: '#2563eb',
-            weight: 3,
-            opacity: 0.8,
-            dashArray: '5, 5',
+            color: '#3b82f6',
+            weight: 4,
+            opacity: 0.9,
+            dashArray: '8, 8',
           }}
         />
       )}
@@ -73,9 +73,9 @@ export function TrajectoryPath() {
         <Polyline
           positions={descentPoints}
           pathOptions={{
-            color: '#16a34a',
-            weight: 3,
-            opacity: 0.8,
+            color: '#22c55e',
+            weight: 4,
+            opacity: 0.9,
           }}
         />
       )}
@@ -84,19 +84,19 @@ export function TrajectoryPath() {
       {apogeeLatLng && (
         <CircleMarker
           center={apogeeLatLng}
-          radius={8}
+          radius={10}
           pathOptions={{
-            color: '#f59e0b',
-            fillColor: '#fbbf24',
+            color: '#1e293b',
+            fillColor: '#f59e0b',
             fillOpacity: 1,
-            weight: 2,
+            weight: 3,
           }}
         >
-          <Popup>
-            <div className="text-sm">
-              <div className="font-bold mb-1">頂点</div>
-              <div>高度: {stats.maxAltitude.toFixed(1)} m</div>
-              <div>到達時間: {stats.apogeeTime.toFixed(1)} s</div>
+          <Popup className="dark-popup">
+            <div style={{ background: '#1e293b', color: '#f8fafc', padding: '8px', borderRadius: '8px', fontSize: '13px' }}>
+              <div style={{ fontWeight: 'bold', marginBottom: '6px', color: '#f59e0b' }}>頂点 (Apogee)</div>
+              <div style={{ color: '#94a3b8' }}>高度: <span style={{ color: '#f8fafc' }}>{stats.maxAltitude.toFixed(1)} m</span></div>
+              <div style={{ color: '#94a3b8' }}>到達時間: <span style={{ color: '#f8fafc' }}>{stats.apogeeTime.toFixed(1)} s</span></div>
             </div>
           </Popup>
         </CircleMarker>

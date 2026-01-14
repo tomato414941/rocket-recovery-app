@@ -81,7 +81,7 @@ export function RecoveryAssist() {
 
   if (!trajectoryResult) {
     return (
-      <div className="p-4 text-center text-gray-500">
+      <div className="p-4 text-center text-slate-500">
         シミュレーションを実行してから回収支援を使用してください
       </div>
     );
@@ -106,18 +106,18 @@ export function RecoveryAssist() {
 
   return (
     <div className="p-4 space-y-4">
-      <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-        <Navigation size={18} />
+      <h3 className="font-semibold text-slate-50 flex items-center gap-2">
+        <Navigation size={18} className="text-blue-400" />
         回収支援
       </h3>
 
       {/* 位置追跡ボタン */}
       <button
         onClick={toggleTracking}
-        className={`w-full py-3 rounded-lg font-medium flex items-center justify-center gap-2 ${
+        className={`w-full py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-all ${
           watchId !== null
-            ? 'bg-green-600 text-white'
-            : 'bg-blue-600 text-white'
+            ? 'bg-green-600 text-white shadow-lg shadow-green-600/30'
+            : 'bg-blue-600 text-white shadow-lg shadow-blue-600/30 hover:bg-blue-500'
         }`}
       >
         {watchId !== null ? (
@@ -135,11 +135,11 @@ export function RecoveryAssist() {
 
       {/* ナビゲーション情報 */}
       {userLocation && distance !== null && bearing !== null && (
-        <div className="bg-gray-50 rounded-lg p-4 space-y-4">
+        <div className="bg-slate-700/50 rounded-lg p-4 space-y-4 border border-slate-600">
           {/* 距離 */}
           <div className="text-center">
-            <div className="text-sm text-gray-500">目標までの距離</div>
-            <div className="text-4xl font-bold text-gray-900">
+            <div className="text-sm text-slate-400">目標までの距離</div>
+            <div className="text-4xl font-bold text-slate-50">
               {distance < 1000
                 ? `${distance.toFixed(0)} m`
                 : `${(distance / 1000).toFixed(2)} km`}
@@ -149,43 +149,43 @@ export function RecoveryAssist() {
           {/* コンパス */}
           <div className="flex justify-center">
             <div
-              className="w-32 h-32 rounded-full border-4 border-gray-300 relative flex items-center justify-center"
+              className="w-32 h-32 rounded-full border-4 border-slate-600 relative flex items-center justify-center bg-slate-800"
               style={{
                 transform: heading !== null ? `rotate(${-heading}deg)` : 'none',
               }}
             >
               {/* 北マーカー */}
-              <div className="absolute top-1 left-1/2 -translate-x-1/2 text-xs font-bold text-gray-500">
+              <div className="absolute top-1 left-1/2 -translate-x-1/2 text-xs font-bold text-slate-400">
                 N
               </div>
               {/* 方位矢印 */}
               <div
-                className="absolute w-2 h-16 bg-red-500 rounded-full origin-bottom"
+                className="absolute w-2 h-16 bg-gradient-to-t from-red-600 to-red-400 rounded-full origin-bottom shadow-lg shadow-red-500/50"
                 style={{
                   transform: `rotate(${bearing}deg) translateY(-50%)`,
                 }}
               />
               {/* 中心点 */}
-              <div className="w-4 h-4 bg-blue-600 rounded-full z-10" />
+              <div className="w-4 h-4 bg-blue-500 rounded-full z-10 shadow-lg shadow-blue-500/50" />
             </div>
           </div>
 
           {/* 方位情報 */}
           <div className="text-center">
-            <div className="text-sm text-gray-500">方位</div>
-            <div className="text-2xl font-semibold text-gray-900">
+            <div className="text-sm text-slate-400">方位</div>
+            <div className="text-2xl font-semibold text-slate-50">
               {bearing.toFixed(0)}°
-              <span className="text-lg ml-2 text-gray-600">
+              <span className="text-lg ml-2 text-slate-400">
                 ({getCompassDirection(bearing)})
               </span>
             </div>
             {relativeBearing !== null && (
-              <div className="text-sm text-gray-500 mt-1">
+              <div className="text-sm text-slate-500 mt-1">
                 {relativeBearing < 30 || relativeBearing > 330
-                  ? '正面方向'
+                  ? <span className="text-green-400">正面方向</span>
                   : relativeBearing < 180
-                  ? `右に ${relativeBearing.toFixed(0)}°`
-                  : `左に ${(360 - relativeBearing).toFixed(0)}°`}
+                  ? <span className="text-amber-400">右に {relativeBearing.toFixed(0)}°</span>
+                  : <span className="text-amber-400">左に {(360 - relativeBearing).toFixed(0)}°</span>}
               </div>
             )}
           </div>
@@ -193,21 +193,21 @@ export function RecoveryAssist() {
       )}
 
       {/* 予測着地点情報 */}
-      <div className="bg-gray-50 rounded-lg p-3">
-        <div className="text-sm font-medium text-gray-700 mb-2">予測落下地点</div>
-        <div className="text-sm text-gray-600">
-          <div>緯度: {predictedLanding.latitude.toFixed(6)}°</div>
-          <div>経度: {predictedLanding.longitude.toFixed(6)}°</div>
+      <div className="bg-slate-700/50 rounded-lg p-3 border border-slate-600">
+        <div className="text-sm font-medium text-slate-300 mb-2">予測落下地点</div>
+        <div className="text-sm text-slate-400">
+          <div>緯度: <span className="text-slate-200">{predictedLanding.latitude.toFixed(6)}°</span></div>
+          <div>経度: <span className="text-slate-200">{predictedLanding.longitude.toFixed(6)}°</span></div>
         </div>
       </div>
 
       {/* 現在地情報 */}
       {userLocation && (
-        <div className="bg-gray-50 rounded-lg p-3">
-          <div className="text-sm font-medium text-gray-700 mb-2">現在地</div>
-          <div className="text-sm text-gray-600">
-            <div>緯度: {userLocation.latitude.toFixed(6)}°</div>
-            <div>経度: {userLocation.longitude.toFixed(6)}°</div>
+        <div className="bg-slate-700/50 rounded-lg p-3 border border-slate-600">
+          <div className="text-sm font-medium text-slate-300 mb-2">現在地</div>
+          <div className="text-sm text-slate-400">
+            <div>緯度: <span className="text-slate-200">{userLocation.latitude.toFixed(6)}°</span></div>
+            <div>経度: <span className="text-slate-200">{userLocation.longitude.toFixed(6)}°</span></div>
           </div>
         </div>
       )}
