@@ -2,17 +2,66 @@
  * 気象データ設定
  */
 
+import { useState } from 'react';
 import { useMissionStore } from '../../store/missionStore';
 import { getWindDirectionLabelJa } from '../../types/weather';
-import { Wind, Thermometer, Gauge } from 'lucide-react';
+import { fetchWeatherData } from '../../services/weather/WeatherAPI';
+import { Wind, Thermometer, Gauge, Cloud, Loader2 } from 'lucide-react';
 
 export function WeatherSettings() {
-  const { weatherData, setWeatherData } = useMissionStore();
+  const { weatherData, setWeatherData, launchSite } = useMissionStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleFetchWeather = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const data = await fetchWeatherData(launchSite.latitude, launchSite.longitude);
+      setWeatherData(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '天気データの取得に失敗しました');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-3 bg-slate-700/50 p-3 rounded-lg">
-      {/* 風速・風向 */}
+      {/* API取得ボタン */}
       <div className="space-y-2">
+        <button
+          onClick={handleFetchWeather}
+          disabled={isLoading}
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-600 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors"
+        >
+          {isLoading ? (
+            <>
+              <Loader2 size={16} className="animate-spin" />
+              取得中...
+            </>
+          ) : (
+            <>
+              <Cloud size={16} />
+              発射地点の天気を取得
+            </>
+          )}
+        </button>
+        {error && (
+          <div className="text-xs text-red-400 bg-red-900/30 px-2 py-1 rounded">
+            {error}
+          </div>
+        )}
+        {weatherData.source === 'api' && weatherData.timestamp && (
+          <div className="text-xs text-green-400">
+            ✓ API取得済み ({weatherData.timestamp.toLocaleTimeString()})
+          </div>
+        )}
+      </div>
+
+      {/* 風速・風向 */}
+      <div className="space-y-2 pt-2 border-t border-slate-600">
         <div className="flex items-center gap-2 text-sm text-slate-300">
           <Wind size={16} className="text-blue-400" />
           <span className="font-medium">風</span>
@@ -53,6 +102,21 @@ export function WeatherSettings() {
           )}
         </div>
       </div>
+
+      {/* 高度別風データ（APIから取得時のみ表示） */}
+      {weatherData.windLayers && weatherData.windLayers.length > 0 && (
+        <div className="space-y-1 pt-2 border-t border-slate-600">
+          <div className="text-xs text-slate-400">高度別風データ:</div>
+          {weatherData.windLayers.map((layer) => (
+            <div key={layer.altitude} className="text-xs text-slate-500 flex justify-between">
+              <span>{layer.altitude}m</span>
+              <span>
+                {layer.windSpeed.toFixed(1)} m/s / {layer.windDirection}°
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* 気温・気圧 */}
       <div className="space-y-2 pt-2 border-t border-slate-600">
