@@ -57,6 +57,7 @@ src/
 
 - GitHub Actions: lint → test → type-check → build
 - Vercel: mainブランチへのpushで自動デプロイ
+- **pre-commit hook**: husky + lint-staged でコミット前に自動lint
 
 ## Notes
 
