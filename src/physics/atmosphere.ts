@@ -49,13 +49,14 @@ export function getPressure(altitude: number, surfacePressure?: number): number 
     : SEA_LEVEL_STANDARD.pressure;
   const T0 = SEA_LEVEL_STANDARD.temperature;
 
-  if (altitude < 11000) {
+  if (altitude <= 11000) {
     // 対流圏：気圧高度公式
-    const exponent = PHYSICAL_CONSTANTS.g0 / (PHYSICAL_CONSTANTS.R * LAPSE_RATE);
+    // 指数は -g/(R*L) で、L<0なので結果は正の値になる
+    const exponent = -PHYSICAL_CONSTANTS.g0 / (PHYSICAL_CONSTANTS.R * LAPSE_RATE);
     return P0 * Math.pow(1 + (LAPSE_RATE * altitude) / T0, exponent);
   }
 
-  // 成層圏：等温大気として計算
+  // 成層圏：等温大気として計算（11km以上）
   const P11 = getPressure(11000, surfacePressure);
   const T11 = 216.65;
   return P11 * Math.exp(-PHYSICAL_CONSTANTS.g0 * (altitude - 11000) / (PHYSICAL_CONSTANTS.R * T11));
