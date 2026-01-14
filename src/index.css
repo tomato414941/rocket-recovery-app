@@ -2,6 +2,11 @@
 
 @import "tailwindcss";
 
+/* スムーズスクロール */
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   font-family: 'Inter', system-ui, sans-serif;
@@ -9,6 +14,40 @@ body {
   color: #f8fafc;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* iOSモーメンタムスクロール */
+.overflow-y-auto,
+.overflow-x-auto,
+.overflow-auto {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* スクロールコンテナ（スクロールチェーン防止） */
+.scroll-container {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* モバイルでのスクロールバー非表示（機能は維持） */
+@media (max-width: 768px) {
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* タッチターゲットの最小サイズ（アクセシビリティ） */
+@media (max-width: 768px) {
+  button,
+  input,
+  select {
+    min-height: 44px;
+  }
 }
 
 /* スクロールバーのダークテーマ */

@@ -23,6 +23,11 @@ import { DEFAULT_LAUNCH_SITE as defaultLaunchSite } from '../types/mission';
 export type ViewMode = 'setup' | 'simulation' | 'recovery';
 
 /**
+ * スクロール位置の型
+ */
+type ScrollPositions = Record<ViewMode, number>;
+
+/**
  * ミッションストアの状態
  */
 interface MissionState {
@@ -49,6 +54,9 @@ interface MissionState {
   // ユーザー位置（回収モード用）
   userLocation: Coordinates | null;
 
+  // スクロール位置（ビューごとに保持）
+  scrollPositions: ScrollPositions;
+
   // アクション
   setViewMode: (mode: ViewMode) => void;
   setLaunchSite: (site: Partial<LaunchSite>) => void;
@@ -58,6 +66,7 @@ interface MissionState {
   setTelemetryMode: (mode: TelemetryMode) => void;
   updateTelemetry: (data: TelemetryData) => void;
   setUserLocation: (coords: Coordinates | null) => void;
+  setScrollPosition: (mode: ViewMode, position: number) => void;
   runSimulation: () => void;
   resetToDefaults: () => void;
 }
@@ -78,6 +87,7 @@ export const useMissionStore = create<MissionState>((set, get) => ({
   isCalculating: false,
   calculationError: null,
   userLocation: null,
+  scrollPositions: { setup: 0, simulation: 0, recovery: 0 },
 
   // アクション
   setViewMode: (mode) => set({ viewMode: mode }),
@@ -111,6 +121,11 @@ export const useMissionStore = create<MissionState>((set, get) => ({
   updateTelemetry: (data) => set({ currentTelemetry: data }),
 
   setUserLocation: (coords) => set({ userLocation: coords }),
+
+  setScrollPosition: (mode, position) =>
+    set((state) => ({
+      scrollPositions: { ...state.scrollPositions, [mode]: position },
+    })),
 
   runSimulation: () => {
     const state = get();

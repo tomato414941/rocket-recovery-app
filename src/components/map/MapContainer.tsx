@@ -8,6 +8,7 @@ import { useMissionStore } from '../../store/missionStore';
 import { LaunchSiteMarker } from './LaunchSiteMarker';
 import { TrajectoryPath } from './TrajectoryPath';
 import { LandingZone } from './LandingZone';
+import { MapScrollHandler } from './MapScrollHandler';
 import 'leaflet/dist/leaflet.css';
 
 /**
@@ -56,6 +57,9 @@ export function MapView() {
 
       {/* 地図更新ハンドラ */}
       <MapUpdater />
+
+      {/* スクロールズーム制御 */}
+      <MapScrollHandler />
 
       {/* 発射地点マーカー */}
       <LaunchSiteMarker />

@@ -13,6 +13,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { useMissionStore } from '../../store/missionStore';
+import { TouchScrollWrapper } from '../shared/TouchScrollWrapper';
 
 export function FlightChart() {
   const { trajectoryResult, launchSite } = useMissionStore();
@@ -43,7 +44,7 @@ export function FlightChart() {
     }));
 
   return (
-    <div className="h-full p-2 bg-slate-800">
+    <TouchScrollWrapper className="h-full p-2 bg-slate-800">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={chartData}
@@ -148,6 +149,6 @@ export function FlightChart() {
           />
         </LineChart>
       </ResponsiveContainer>
-    </div>
+    </TouchScrollWrapper>
   );
 }

@@ -183,6 +183,13 @@ function Scene() {
         maxDistance={gridSize * 2}
         minDistance={10}
         target={[0, maxAlt / 2, 0]}
+        enablePan={true}
+        enableZoom={true}
+        // モバイルタッチ操作の設定
+        touches={{
+          ONE: THREE.TOUCH.ROTATE,
+          TWO: THREE.TOUCH.DOLLY_PAN,
+        }}
       />
     </>
   );
@@ -197,13 +204,17 @@ export function Trajectory3D() {
   const cameraDistance = Math.max(200, maxAlt * 2);
 
   return (
-    <div className="w-full h-full bg-slate-900 rounded-lg overflow-hidden">
+    <div className="w-full h-full bg-slate-900 rounded-lg overflow-hidden" style={{ touchAction: 'none' }}>
       <Canvas
         camera={{
           position: [cameraDistance * 0.8, cameraDistance * 0.6, cameraDistance * 0.8],
           fov: 50,
           near: 1,
           far: cameraDistance * 10,
+        }}
+        onCreated={({ gl }) => {
+          // キャンバスがページスクロールをブロックしないように設定
+          gl.domElement.style.touchAction = 'none';
         }}
       >
         <Scene />

@@ -5,6 +5,7 @@
 
 import type { ReactNode } from 'react';
 import { useMissionStore, type ViewMode } from '../../store/missionStore';
+import { useScrollRestoration } from '../../hooks/useScrollRestoration';
 import { Rocket, Map, Navigation } from 'lucide-react';
 
 interface AppShellProps {
@@ -92,17 +93,24 @@ function NavigationHeader() {
  * デスクトップレイアウト
  */
 function DesktopLayout({ sidebar, main, bottom }: AppShellProps) {
+  const { viewMode } = useMissionStore();
+  const { containerRef, onScroll } = useScrollRestoration(viewMode);
+
   return (
     <div className="hidden md:flex flex-col h-screen bg-slate-900">
       <NavigationHeader />
       <div className="flex flex-1 overflow-hidden">
-        <aside className="w-80 lg:w-96 border-r border-slate-700 overflow-y-auto bg-slate-800">
+        <aside
+          ref={containerRef}
+          onScroll={onScroll}
+          className="w-80 lg:w-96 border-r border-slate-700 overflow-y-auto bg-slate-800 scroll-container"
+        >
           {sidebar}
         </aside>
         <main className="flex-1 flex flex-col overflow-hidden">
           <div className="flex-1 overflow-hidden">{main}</div>
           {bottom && (
-            <div className="h-48 border-t border-slate-700 bg-slate-800 overflow-hidden">
+            <div className="min-h-48 max-h-64 border-t border-slate-700 bg-slate-800 overflow-y-auto flex-shrink-0">
               {bottom}
             </div>
           )}
@@ -117,20 +125,25 @@ function DesktopLayout({ sidebar, main, bottom }: AppShellProps) {
  */
 function MobileLayout({ sidebar, main, bottom }: AppShellProps) {
   const { viewMode } = useMissionStore();
+  const { containerRef, onScroll } = useScrollRestoration(viewMode);
 
   return (
     <div className="flex md:hidden flex-col h-screen bg-slate-900">
       <NavigationHeader />
 
       {viewMode === 'setup' ? (
-        <div className="flex-1 overflow-y-auto bg-slate-800">
+        <div
+          ref={containerRef}
+          onScroll={onScroll}
+          className="flex-1 overflow-y-auto bg-slate-800 scroll-container"
+        >
           {sidebar}
         </div>
       ) : (
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="flex-1 overflow-hidden">{main}</div>
           {bottom && (
-            <div className="max-h-[40vh] border-t border-slate-700 bg-slate-800 overflow-y-auto">
+            <div className="max-h-[40vh] border-t border-slate-700 bg-slate-800 overflow-y-auto scroll-container">
               {bottom}
             </div>
           )}
