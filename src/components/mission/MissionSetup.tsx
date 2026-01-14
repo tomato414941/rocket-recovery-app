@@ -18,7 +18,7 @@ export function MissionSetup() {
   } = useMissionStore();
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="p-4 pb-8 space-y-6">
       {/* ヘッダー */}
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-slate-50">ミッション設定</h2>

@@ -26,7 +26,7 @@ function App() {
         <div className="relative w-full h-full">
           <Trajectory3D />
           {/* 2D/3D切り替えボタン */}
-          <div className="absolute top-4 left-4 z-10">
+          <div className="absolute top-4 right-4 z-10">
             <ViewToggle is3D={is3DView} onToggle={setIs3DView} />
           </div>
         </div>
@@ -39,7 +39,7 @@ function App() {
         <div className="relative w-full h-full">
           <MapView />
           {/* 2D/3D切り替えボタン */}
-          <div className="absolute top-4 left-4 z-[1000]">
+          <div className="absolute top-4 right-4 z-[1000]">
             <ViewToggle is3D={is3DView} onToggle={setIs3DView} />
           </div>
         </div>

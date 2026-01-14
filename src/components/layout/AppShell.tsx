@@ -97,7 +97,7 @@ function DesktopLayout({ sidebar, main, bottom }: AppShellProps) {
   const { containerRef, onScroll } = useScrollRestoration(viewMode);
 
   return (
-    <div className="hidden md:flex flex-col h-screen bg-slate-900">
+    <div className="hidden md:flex flex-col h-screen md:h-[100dvh] bg-slate-900">
       <NavigationHeader />
       <div className="flex flex-1 overflow-hidden">
         <aside
@@ -128,7 +128,7 @@ function MobileLayout({ sidebar, main, bottom }: AppShellProps) {
   const { containerRef, onScroll } = useScrollRestoration(viewMode);
 
   return (
-    <div className="flex md:hidden flex-col h-screen bg-slate-900">
+    <div className="flex md:hidden flex-col h-[100dvh] bg-slate-900">
       <NavigationHeader />
 
       {viewMode === 'setup' ? (
