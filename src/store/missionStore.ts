@@ -9,6 +9,7 @@ import type { WeatherData } from '../types/weather';
 import type { LaunchSite, Coordinates } from '../types/mission';
 import type { TrajectoryResult } from '../types/trajectory';
 import type { TelemetryData, TelemetryMode } from '../types/telemetry';
+import type { TelemetryServiceStatus } from '../services/telemetry';
 import { calculateTrajectory } from '../services/trajectory/TrajectoryService';
 
 // デフォルト値をインポート
@@ -45,6 +46,8 @@ interface MissionState {
   // テレメトリ
   telemetryMode: TelemetryMode;
   currentTelemetry: TelemetryData | null;
+  telemetryHistory: TelemetryData[];
+  telemetryStatus: TelemetryServiceStatus;
 
   // 計算結果
   trajectoryResult: TrajectoryResult | null;
@@ -65,6 +68,9 @@ interface MissionState {
   setWeatherData: (data: Partial<WeatherData>) => void;
   setTelemetryMode: (mode: TelemetryMode) => void;
   updateTelemetry: (data: TelemetryData) => void;
+  addTelemetryToHistory: (data: TelemetryData) => void;
+  clearTelemetryHistory: () => void;
+  setTelemetryStatus: (status: TelemetryServiceStatus) => void;
   setUserLocation: (coords: Coordinates | null) => void;
   setScrollPosition: (mode: ViewMode, position: number) => void;
   runSimulation: () => void;
@@ -83,6 +89,8 @@ export const useMissionStore = create<MissionState>((set, get) => ({
   weatherData: defaultWeather,
   telemetryMode: 'none',
   currentTelemetry: null,
+  telemetryHistory: [],
+  telemetryStatus: 'idle',
   trajectoryResult: null,
   isCalculating: false,
   calculationError: null,
@@ -119,6 +127,21 @@ export const useMissionStore = create<MissionState>((set, get) => ({
   setTelemetryMode: (mode) => set({ telemetryMode: mode }),
 
   updateTelemetry: (data) => set({ currentTelemetry: data }),
+
+  addTelemetryToHistory: (data) =>
+    set((state) => ({
+      telemetryHistory: [...state.telemetryHistory, data],
+      currentTelemetry: data,
+    })),
+
+  clearTelemetryHistory: () =>
+    set({
+      telemetryHistory: [],
+      currentTelemetry: null,
+      telemetryStatus: 'idle',
+    }),
+
+  setTelemetryStatus: (status) => set({ telemetryStatus: status }),
 
   setUserLocation: (coords) => set({ userLocation: coords }),
 

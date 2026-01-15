@@ -4,23 +4,54 @@
 
 import { useEffect, useState } from 'react';
 import { useMissionStore } from '../../store/missionStore';
-import { calculateDistance, calculateBearing } from '../../types/mission';
-import { Navigation, MapPin, RefreshCw } from 'lucide-react';
+import { calculateDistance, calculateBearing, type Coordinates } from '../../types/mission';
+import { Navigation, MapPin, RefreshCw, Rocket, Target, ArrowUp, ArrowDown, Circle } from 'lucide-react';
 
 // iOSのDeviceOrientationEvent拡張
 interface DeviceOrientationEventWithWebkit extends DeviceOrientationEvent {
   webkitCompassHeading?: number;
 }
 
+/** ナビゲーションターゲット */
+type NavigationTarget = 'predicted' | 'live';
+
+/** 飛行ステータス */
+type FlightStatus = 'ascending' | 'descending' | 'landed' | 'unknown';
+
 export function RecoveryAssist() {
   const {
     trajectoryResult,
     userLocation,
     setUserLocation,
+    currentTelemetry,
+    telemetryStatus,
   } = useMissionStore();
 
   const [watchId, setWatchId] = useState<number | null>(null);
   const [heading, setHeading] = useState<number | null>(null);
+  const [navTarget, setNavTarget] = useState<NavigationTarget>('predicted');
+
+  // ロケットの飛行ステータスを判定
+  const getFlightStatus = (): FlightStatus => {
+    if (!currentTelemetry || telemetryStatus === 'idle') return 'unknown';
+    const altitude = currentTelemetry.altitude ?? 0;
+    const velocity = currentTelemetry.velocity ?? 0;
+    if (altitude < 10 && velocity < 2) return 'landed';
+    if (velocity > 5) return 'ascending';
+    return 'descending';
+  };
+
+  const flightStatus = getFlightStatus();
+
+  // ナビゲーションターゲットの座標を取得
+  const getTargetCoordinates = (): Coordinates | null => {
+    if (navTarget === 'live' && currentTelemetry?.coordinates) {
+      return currentTelemetry.coordinates;
+    }
+    return trajectoryResult?.predictedLanding ?? null;
+  };
+
+  const targetCoordinates = getTargetCoordinates();
 
   // 現在地の追跡を開始/停止
   const toggleTracking = () => {
@@ -90,12 +121,12 @@ export function RecoveryAssist() {
   const { predictedLanding } = trajectoryResult;
 
   // 距離と方位を計算
-  const distance = userLocation
-    ? calculateDistance(userLocation, predictedLanding)
+  const distance = userLocation && targetCoordinates
+    ? calculateDistance(userLocation, targetCoordinates)
     : null;
 
-  const bearing = userLocation
-    ? calculateBearing(userLocation, predictedLanding)
+  const bearing = userLocation && targetCoordinates
+    ? calculateBearing(userLocation, targetCoordinates)
     : null;
 
   // コンパス相対方位（デバイスの向きを考慮）
@@ -104,12 +135,64 @@ export function RecoveryAssist() {
       ? (bearing - heading + 360) % 360
       : null;
 
+  // ライブテレメトリーが有効かどうか
+  const hasLiveTelemetry = telemetryStatus !== 'idle' && currentTelemetry?.coordinates;
+
   return (
-    <div className="p-4 space-y-4">
+    <div className="p-4 pb-8 space-y-4">
       <h3 className="font-semibold text-slate-50 flex items-center gap-2">
         <Navigation size={18} className="text-blue-400" />
         回収支援
       </h3>
+
+      {/* ロケット飛行ステータス */}
+      {hasLiveTelemetry && (
+        <div className="bg-slate-700/50 rounded-lg p-3 border border-slate-600">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Rocket size={18} className="text-blue-400" />
+              <span className="text-sm font-medium text-slate-300">ロケット状態</span>
+            </div>
+            <FlightStatusBadge status={flightStatus} />
+          </div>
+          <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
+            <div className="text-slate-400">
+              高度: <span className="text-slate-200 font-medium">{(currentTelemetry?.altitude ?? 0).toFixed(1)} m</span>
+            </div>
+            <div className="text-slate-400">
+              速度: <span className="text-slate-200 font-medium">{(currentTelemetry?.velocity ?? 0).toFixed(1)} m/s</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ナビゲーションターゲット切り替え */}
+      {hasLiveTelemetry && (
+        <div className="flex bg-slate-700 rounded-lg p-1">
+          <button
+            onClick={() => setNavTarget('predicted')}
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-md text-sm font-medium transition-colors ${
+              navTarget === 'predicted'
+                ? 'bg-blue-600 text-white'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <Target size={14} />
+            予測着地点
+          </button>
+          <button
+            onClick={() => setNavTarget('live')}
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-md text-sm font-medium transition-colors ${
+              navTarget === 'live'
+                ? 'bg-green-600 text-white'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <Rocket size={14} />
+            ライブ位置
+          </button>
+        </div>
+      )}
 
       {/* 位置追跡ボタン */}
       <button
@@ -138,7 +221,9 @@ export function RecoveryAssist() {
         <div className="bg-slate-700/50 rounded-lg p-4 space-y-4 border border-slate-600">
           {/* 距離 */}
           <div className="text-center">
-            <div className="text-sm text-slate-400">目標までの距離</div>
+            <div className="text-sm text-slate-400">
+              {navTarget === 'live' ? 'ロケット' : '予測着地点'}までの距離
+            </div>
             <div className="text-4xl font-bold text-slate-50">
               {distance < 1000
                 ? `${distance.toFixed(0)} m`
@@ -223,4 +308,41 @@ function getCompassDirection(degrees: number): string {
                       '南', '南南西', '南西', '西南西', '西', '西北西', '北西', '北北西'];
   const index = Math.round(degrees / 22.5) % 16;
   return directions[index];
+}
+
+/**
+ * 飛行ステータスバッジ
+ */
+function FlightStatusBadge({ status }: { status: FlightStatus }) {
+  const config = {
+    ascending: {
+      icon: ArrowUp,
+      label: '上昇中',
+      className: 'bg-blue-600/20 text-blue-400 border-blue-500/30',
+    },
+    descending: {
+      icon: ArrowDown,
+      label: '降下中',
+      className: 'bg-green-600/20 text-green-400 border-green-500/30',
+    },
+    landed: {
+      icon: Circle,
+      label: '着地',
+      className: 'bg-red-600/20 text-red-400 border-red-500/30',
+    },
+    unknown: {
+      icon: Circle,
+      label: '不明',
+      className: 'bg-slate-600/20 text-slate-400 border-slate-500/30',
+    },
+  };
+
+  const { icon: Icon, label, className } = config[status];
+
+  return (
+    <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${className}`}>
+      <Icon size={12} />
+      {label}
+    </div>
+  );
 }

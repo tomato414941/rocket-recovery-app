@@ -8,6 +8,7 @@ import { useMissionStore } from '../../store/missionStore';
 import { LaunchSiteMarker } from './LaunchSiteMarker';
 import { TrajectoryPath } from './TrajectoryPath';
 import { LandingZone } from './LandingZone';
+import { RocketMarker } from './RocketMarker';
 import { MapScrollHandler } from './MapScrollHandler';
 import 'leaflet/dist/leaflet.css';
 
@@ -69,6 +70,9 @@ export function MapView() {
 
       {/* 着地予測範囲 */}
       {trajectoryResult && <LandingZone />}
+
+      {/* ロケット位置（ライブテレメトリー） */}
+      <RocketMarker />
     </LeafletMapContainer>
   );
 }

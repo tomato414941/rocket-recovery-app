@@ -3,6 +3,7 @@
  */
 
 import { useMissionStore } from '../../store/missionStore';
+import { TelemetryControls } from './TelemetryControls';
 import {
   Mountain,
   Clock,
@@ -56,8 +57,11 @@ export function SimulationResults() {
   const { stats, predictedLanding, uncertaintyEllipse } = trajectoryResult;
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="p-4 pb-8 space-y-4">
       <h3 className="font-semibold text-slate-50">シミュレーション結果</h3>
+
+      {/* テレメトリーコントロール */}
+      <TelemetryControls />
 
       {/* 主要統計 */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
